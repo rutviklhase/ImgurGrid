@@ -15,11 +15,14 @@ import close from "../../assets/close.png"
 export default function Grid(){
     const [loading, setLoading] = useState(false);
     const [posts, setPosts] = useState([]);
+    const [section, setSection] = useState("hot");
+    const [page, setPage] = useState("1");
+    const [showViral, setShowViral] = useState("false");
 
     useEffect(()=>{
         const loadPost = async () => {
             setLoading(true);
-            const response = await axios.get('https://api.imgur.com/3/gallery/hot/top/day/1?showViral=true&mature=true&album_previews=true', {headers: {"Authorization" : `Client-ID 9d8ac8174db155c` }});
+            const response = await axios.get(`https://api.imgur.com/3/gallery/${section}/top/day/${page}?showViral=${showViral}&mature=true&album_previews=true`, {headers: {"Authorization" : `Client-ID 9d8ac8174db155c` }});
             var result = [];
             for (var i in response)
             {
@@ -38,8 +41,7 @@ export default function Grid(){
             setLoading(false);
         }
         loadPost();
-    },[]);
-
+    },[section, page, showViral]);
     const [model, setModel] = useState(false);
     const [tempImgSrc, setTempImgSrc] = useState('');
     const [tempDesc, setTempDesc] = useState('');
@@ -62,6 +64,13 @@ export default function Grid(){
 
     return (
         <>
+        <div className="selections">
+            <div className="Section"> 
+            Section : <button onClick={()=>{setSection("hot")}}>Hot</button> <button onClick={()=>setSection("top")}>Top</button> <button onClick={()=>setSection("user")}>User</button>
+            </div>
+            Viral: <button onClick={()=>{setShowViral("true")}}> Enabled </button> <button onClick={()=>{setShowViral("false")}} > Disabled </button>
+            <div>Page: <button onClick={()=>{setPage(page-1)}}> - </button>{page} <button onClick={()=>{setPage(page+1)}}> + </button> </div>
+        </div>
         <div className={model?"model open":"model"}>
             <img src={tempImgSrc}/>
             <div className="info">
@@ -70,7 +79,7 @@ export default function Grid(){
             </div>
             
 
-            <img src={close} onClick={()=>setModel(false)} className="close"></img>
+        <img src={close} onClick={()=>setModel(false)} className="close"></img>
         </div>
         <div className="Grid">
             {

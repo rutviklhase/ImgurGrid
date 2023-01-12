@@ -2,8 +2,23 @@
     color: rgb(255, 255, 255);
     font-family: Poppins;
 }
+
+.selections{
+    padding-top: 20vh;
+    color: white;
+    button{
+        color:black
+    }
+    z-index: 999;
+    position: fixed;
+    padding-left: 1vw;
+    
+}  
+
 .Grid{
-   
+
+    
+  
 -webkit-column-count: 4;
 column-count: 4;
 -webkit-column-width: 33%;
