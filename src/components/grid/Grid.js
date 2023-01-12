@@ -2,6 +2,14 @@ import "./Grid.scss"
 import React, { useEffect } from "react"
 import axios from "axios"
 import { useState } from "react";
+import { Card } from "@mui/material";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import CardActionArea from "@mui/material/CardActionArea"; 
+import { color, maxHeight } from "@mui/system";
+import { blue } from "@mui/material/colors";
+
 
 export default function Grid(){
     const [loading, setLoading] = useState(false);
@@ -21,8 +29,8 @@ export default function Grid(){
                     // console.log(response[i].data[j].images[0]);
                     for(var k in response[i].data[j].images)
                     {
-                      console.log(response[i].data[j].images[k].link)
-                     result.push(response[i].data[j].images[k].link);
+                      console.log(response[i].data[j].images[k])
+                     result.push(response[i].data[j].images[k]);
                     }
                 }
                 
@@ -35,11 +43,39 @@ export default function Grid(){
     },[]);
 
     return (
-
+        
         <div className="Grid">
             {
-            loading ? (<h1>Loading...</h1>):(posts.map((item) => <img src={item} className="Image"></img>))
+            loading ? (<h1>Loading...</h1>)
+            :
+            (posts.map((item) => 
+            // <img src={item} className="Image"></img>
+            item.type=="video/mp4"? (<h1></h1>):
+            (
+            <div className="Card"> 
+            <Card sx={{ padding: 1}} style={{backgroundColor: "#0D422F"}}>
+                <CardActionArea>
+                    <CardMedia
+                        component="img"
+                      
+                        image={item.link}
+                        alt="image"
+                    />
+                     <CardContent>
+                        <Typography gutterBottom variant="h5" component="div" fontFamily="Poppins" fontSize="1vh">
+                            {item.description}
+                        </Typography>
+                        </CardContent>
+                </CardActionArea>
+            </Card>
+            </div>
+            )
+            
+            
+            )
+            )
             }
+           
         </div>
         
     );
