@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea"; 
 import { color, maxHeight } from "@mui/system";
 import { blue } from "@mui/material/colors";
+import close from "../../assets/close.png"
 
 
 export default function Grid(){
@@ -22,48 +23,73 @@ export default function Grid(){
             var result = [];
             for (var i in response)
             {
-                // result.push(response[i].data[1].images[0].link);
-                // console.log(response[i].data[1].images[0].link);
                 for(var j in response[i].data)
                 {
-                    // console.log(response[i].data[j].images[0]);
                     for(var k in response[i].data[j].images)
                     {
-                      console.log(response[i].data[j].images[k])
-                     result.push(response[i].data[j].images[k]);
+                      console.log(response[i].data[j])
+                     result.push(response[i].data[j]);
                     }
                 }
                 
             }
-            console.log(result);
+            // console.log(result);
             setPosts(result);
             setLoading(false);
         }
         loadPost();
     },[]);
 
+    const [model, setModel] = useState(false);
+    const [tempImgSrc, setTempImgSrc] = useState('');
+    const [tempDesc, setTempDesc] = useState('');
+    const [tempUps, setTempUps] = useState(1);
+    const [tempDowns, setTempDowns] = useState(1);
+    const [tempScore, setTempScore] = useState('1');
+
+
+    const getImg = (imgSrc, desc, ups, downs, score) => {
+        setTempImgSrc(imgSrc);
+        setTempDesc(desc);
+        setTempUps(ups);
+        setTempDowns(downs);
+        setModel(true);
+        setTempScore(true);
+    }
+
+
+
+
     return (
-        
+        <>
+        <div className={model?"model open":"model"}>
+            <img src={tempImgSrc}/>
+            <div className="info">
+                <div className="desc">UpVotes : {tempUps}</div>
+                <div className="desc">DownVotes : {tempDowns}</div>
+            </div>
+            
+
+            <img src={close} onClick={()=>setModel(false)} className="close"></img>
+        </div>
         <div className="Grid">
             {
             loading ? (<h1>Loading...</h1>)
             :
             (posts.map((item) => 
-            // <img src={item} className="Image"></img>
-            item.type=="video/mp4"? (<h1></h1>):
+            item.images[0].type=="video/mp4"? (<h1></h1>):
             (
             <div className="Card"> 
             <Card sx={{ padding: 1}} style={{backgroundColor: "#0D422F"}}>
-                <CardActionArea>
+                <CardActionArea onClick={()=>getImg(item.images[0].link, item.ups, item.downs, item.score)}>
                     <CardMedia
                         component="img"
-                      
-                        image={item.link}
+                        image={item.images[0].link}
                         alt="image"
                     />
                      <CardContent>
                         <Typography gutterBottom variant="h5" component="div" fontFamily="Poppins" fontSize="1vh">
-                            {item.description}
+                            {item.title}
                         </Typography>
                         </CardContent>
                 </CardActionArea>
@@ -77,37 +103,10 @@ export default function Grid(){
             }
            
         </div>
+        </>
         
     );
 }
 
-// async function getGrid(){
-//     try{
-//         const response = await axios.get('https://api.imgur.com/3/gallery/hot/top/day/1?showViral=true&mature=true&album_previews=true', {headers: {"Authorization" : `Client-ID 9d8ac8174db155c` }});
-//         var result = [];
-//         // console.log(result);
-//         for (var i in response)
-//         {
-//             result.push([i,response[i]]);
-//         }
-//         return result;
-
-//     }
-//     catch(error){
-//         console.error(error);
-//     }
-// }
-
-// async function getImageObj(){
-//     const data = await getGrid();
-
-//     return data[0][1].data[0].images[0].type.value;
-    
-// }
-
-// function printData(){
-//    const imgobj =  getImageObj();
-//    return imgobj;
-// }
 
 
